@@ -22,6 +22,9 @@ class CustomerOptionValueTranslation extends AbstractTranslation implements Cust
     /** @var string */
     protected $name;
 
+    /** @var string */
+    protected $description;
+
     /**
      * {@inheritdoc}
      */
@@ -45,4 +48,22 @@ class CustomerOptionValueTranslation extends AbstractTranslation implements Cust
     {
         $this->name = $name;
     }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+
 }

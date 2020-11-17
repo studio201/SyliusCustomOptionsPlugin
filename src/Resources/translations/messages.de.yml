@@ -28,8 +28,11 @@ brille24:
             subheader: Verwalten der Kundenoptionen
             type:
                 text: Text
-                select: Auswahlfeld
-                multi_select: Mehrfaches Auswählen
+                textarea: Mehrfachtext
+                select: Auswahlfeld (Dropdown)
+                select_expanded: Auswahlfeld (Radioboxen)
+                multi_select: Mehrfaches Auswählen (Dropdown)
+                multi_select_expanded: Mehrfaches Auswählen (Checkboxen)
                 file: Datei
                 date: Datum
                 datetime: Datum und Zeit

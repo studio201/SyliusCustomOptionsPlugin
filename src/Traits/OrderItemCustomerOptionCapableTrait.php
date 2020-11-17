@@ -51,7 +51,9 @@ trait OrderItemCustomerOptionCapableTrait
 
             foreach ($orderItemOptionList as $orderItemOption) {
                 // Multiselect needs to be an array
-                if ($orderItemOption->getCustomerOption()->getType() === CustomerOptionTypeEnum::MULTI_SELECT) {
+                if ($orderItemOption->getCustomerOption()->getType() === CustomerOptionTypeEnum::MULTI_SELECT ||
+                    $orderItemOption->getCustomerOption()->getType() === CustomerOptionTypeEnum::MULTI_SELECT_EXPANDED
+                ) {
                     $assocArray[$orderItemOption->getCustomerOptionCode()][] = $orderItemOption;
                 } else {
                     $assocArray[$orderItemOption->getCustomerOptionCode()] = $orderItemOption;

@@ -50,10 +50,10 @@ final class ShopCustomerOptionType extends AbstractType
         MoneyFormatterInterface $moneyFormatter,
         LocaleContextInterface $localeContext
     ) {
-        $this->channelContext  = $channelContext;
+        $this->channelContext = $channelContext;
         $this->currencyContext = $currencyContext;
-        $this->moneyFormatter  = $moneyFormatter;
-        $this->localeContext   = $localeContext;
+        $this->moneyFormatter = $moneyFormatter;
+        $this->localeContext = $localeContext;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -69,16 +69,15 @@ final class ShopCustomerOptionType extends AbstractType
 
         foreach ($customerOptions as $customerOption) {
             $customerOptionType = $customerOption->getType();
-            $fieldName          = $customerOption->getCode();
+            $fieldName = $customerOption->getCode();
 
             [$class, $formOptions] = CustomerOptionTypeEnum::getFormTypeArray()[$customerOptionType];
 
-            $fieldConfig           = $this->getFormConfiguration($formOptions, $customerOption, $product);
+            $fieldConfig = $this->getFormConfiguration($formOptions, $customerOption, $product);
             $fieldConfig['mapped'] = $options['mapped'];
-
             $builder->add($fieldName, $class, $fieldConfig);
         }
-
+        
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
             static function (FormEvent $event): void {
@@ -110,9 +109,9 @@ final class ShopCustomerOptionType extends AbstractType
     /**
      * Gets the settings for the form type based on the type that the form field is for
      *
-     * @param array                   $formOptions
+     * @param array $formOptions
      * @param CustomerOptionInterface $customerOption
-     * @param ProductInterface        $product
+     * @param ProductInterface $product
      *
      * @return array
      */
@@ -122,7 +121,7 @@ final class ShopCustomerOptionType extends AbstractType
         ProductInterface $product
     ): array {
         $defaultOptions = [
-            'label'    => $customerOption->getName(),
+            'label' => $customerOption->getName(),
             'required' => $customerOption->isRequired(),
         ];
 
@@ -132,7 +131,7 @@ final class ShopCustomerOptionType extends AbstractType
         $customerOptionType = $customerOption->getType();
         if (CustomerOptionTypeEnum::isSelect($customerOptionType)) {
             $configuration = [
-                'choices'      => $customerOption->getValues()->toArray(),
+                'choices' => $customerOption->getValues()->toArray(),
                 'choice_label' => function (CustomerOptionValueInterface $value) use ($product): string {
                     return $this->buildValueString($value, $product);
                 },
@@ -146,15 +145,15 @@ final class ShopCustomerOptionType extends AbstractType
 
             if ($constraint !== null) {
                 $constraint->groups = ['sylius'];
-                $configuration      = ['constraints' => [$constraint]];
+                $configuration = ['constraints' => [$constraint]];
             }
 
             if ($customerOption->isRequired()) {
                 /** @var NotBlank $requiredConstraint */
-                $requiredConstraint          = ConstraintCreator::createRequiredConstraint();
+                $requiredConstraint = ConstraintCreator::createRequiredConstraint();
                 $requiredConstraint->message = 'brille24.form.customer_options.required';
 
-                $requiredConstraint->groups     = ['sylius'];
+                $requiredConstraint->groups = ['sylius'];
                 $configuration['constraints'][] = $requiredConstraint;
             }
         }
@@ -174,7 +173,7 @@ final class ShopCustomerOptionType extends AbstractType
 
     /**
      * @param CustomerOptionValueInterface $value
-     * @param ProductInterface             $product
+     * @param ProductInterface $product
      *
      * @return string
      *
@@ -199,7 +198,7 @@ final class ShopCustomerOptionType extends AbstractType
 
         /** @var ChannelInterface $channel */
         $channel = $this->channelContext->getChannel();
-        $price   = $price ?? $value->getPriceForChannel($channel);
+        $price = $price ?? $value->getPriceForChannel($channel);
 
         // No price was found for the current channel, probably because the values weren't updated after adding a new channel
         if ($price === null) {
@@ -217,7 +216,7 @@ final class ShopCustomerOptionType extends AbstractType
             $this->localeContext->getLocaleCode(),
             $this->moneyFormatter
         );
-        $name        = $value->getName();
+        $name = $value->getName();
 
         return "{$name} ($valueString)";
     }

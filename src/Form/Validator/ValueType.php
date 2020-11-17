@@ -38,7 +38,7 @@ class ValueType extends AbstractType
                 $result = null;
 
                 $newConfig = ConditionComparatorEnum::getValueConfig($options['option_type']);
-
+                
                 if ($modelData !== null
                     && is_array($modelData)
                     && array_key_exists('type', $modelData)

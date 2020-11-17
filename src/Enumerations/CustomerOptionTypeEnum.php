@@ -19,28 +19,35 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class CustomerOptionTypeEnum implements EnumInterface
 {
     const __default = null;
 
-    const TEXT         = 'text';
-    const SELECT       = 'select';
+    const TEXT = 'text';
+    const TEXTAREA = 'textarea';
+    const SELECT = 'select';
+    const SELECT_EXPANDED = 'select_expanded';
     const MULTI_SELECT = 'multi_select';
-    const FILE         = 'file';
-    const DATE         = 'date';
-    const DATETIME     = 'datetime';
-    const NUMBER       = 'number';
-    const BOOLEAN      = 'boolean';
+    const MULTI_SELECT_EXPANDED = 'multi_select_expanded';
+    const FILE = 'file';
+    const DATE = 'date';
+    const DATETIME = 'datetime';
+    const NUMBER = 'number';
+    const BOOLEAN = 'boolean';
 
     public static function getConstList(): array
     {
         return [
             self::FILE,
             self::TEXT,
+            self::TEXTAREA,
             self::SELECT,
+            self::SELECT_EXPANDED,
             self::MULTI_SELECT,
+            self::MULTI_SELECT_EXPANDED,
             self::DATE,
             self::DATETIME,
             self::NUMBER,
@@ -61,14 +68,17 @@ final class CustomerOptionTypeEnum implements EnumInterface
     public static function getTranslateArray(): array
     {
         return [
-            self::TEXT         => 'brille24.form.customer_options.type.text',
-            self::SELECT       => 'brille24.form.customer_options.type.select',
+            self::TEXT => 'brille24.form.customer_options.type.text',
+            self::TEXTAREA => 'brille24.form.customer_options.type.textarea',
+            self::SELECT => 'brille24.form.customer_options.type.select',
+            self::SELECT_EXPANDED => 'brille24.form.customer_options.type.select_expanded',
             self::MULTI_SELECT => 'brille24.form.customer_options.type.multi_select',
-            self::FILE         => 'brille24.form.customer_options.type.file',
-            self::DATE         => 'brille24.form.customer_options.type.date',
-            self::DATETIME     => 'brille24.form.customer_options.type.datetime',
-            self::NUMBER       => 'brille24.form.customer_options.type.number',
-            self::BOOLEAN      => 'brille24.form.customer_options.type.boolean',
+            self::MULTI_SELECT_EXPANDED => 'brille24.form.customer_options.type.multi_select_expanded',
+            self::FILE => 'brille24.form.customer_options.type.file',
+            self::DATE => 'brille24.form.customer_options.type.date',
+            self::DATETIME => 'brille24.form.customer_options.type.datetime',
+            self::NUMBER => 'brille24.form.customer_options.type.number',
+            self::BOOLEAN => 'brille24.form.customer_options.type.boolean',
         ];
     }
 
@@ -79,13 +89,57 @@ final class CustomerOptionTypeEnum implements EnumInterface
                 TextType::class,
                 [],
             ],
+            self::TEXTAREA => [
+                TextareaType::class,
+                [],
+            ],
             self::SELECT => [
                 ChoiceType::class,
-                [],
+                [
+                    'choice_attr' => function ($val, $key, $index) {
+                        return [
+                            'data-title' => $val->getTranslation()->getDescription(),
+                            'data-description' => $val->getTranslation()->getDescription(),
+                        ];
+                    },
+                ],
+            ],
+            self::SELECT_EXPANDED => [
+                ChoiceType::class,
+                [
+                    'expanded' => true,
+                    'choice_attr' => function ($val, $key, $index) {
+                        return [
+                            'data-title' => $val->getTranslation()->getDescription(),
+                            'data-description' => $val->getTranslation()->getDescription(),
+                        ];
+                    },
+                ],
             ],
             self::MULTI_SELECT => [
                 ChoiceType::class,
-                ['multiple' => true],
+                [
+                    'multiple' => true,
+                    'choice_attr' => function ($val, $key, $index) {
+                        return [
+                            'data-title' => $val->getTranslation()->getDescription(),
+                            'data-description' => $val->getTranslation()->getDescription(),
+                        ];
+                    },
+                ],
+            ],
+            self::MULTI_SELECT_EXPANDED => [
+                ChoiceType::class,
+                [
+                    'multiple' => true,
+                    'expanded' => true,
+                    'choice_attr' => function ($val, $key, $index) {
+                        return [
+                            'data-title' => $val->getTranslation()->getDescription(),
+                            'data-description' => $val->getTranslation()->getDescription(),
+                        ];
+                    },
+                ],
             ],
             self::DATE => [
                 DateType::class,
@@ -140,7 +194,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
             self::FILE => [
                 'brille24.form.config.max.file_size' => ['type' => 'text', 'value' => '10M'],
                 'brille24.form.config.min.file_size' => ['type' => 'text', 'value' => '0B'],
-                'brille24.form.config.multiple'      => ['type' => 'boolean', 'value' => false],
+                'brille24.form.config.multiple' => ['type' => 'boolean', 'value' => false],
                 'brille24.form.config.allowed_types' => ['type' => 'text', 'value' => ''],
             ],
         ];
@@ -148,7 +202,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
 
     public static function isSelect(string $type): bool
     {
-        return in_array($type, [self::SELECT, self::MULTI_SELECT], true);
+        return in_array($type, [self::SELECT, self::SELECT_EXPANDED, self::MULTI_SELECT, self::MULTI_SELECT_EXPANDED], true);
     }
 
     public static function isDate(string $type): bool

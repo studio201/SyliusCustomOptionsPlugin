@@ -103,16 +103,16 @@ class EditCustomerOptionsAction extends AbstractController
             $customerOption     = $orderItemOption->getCustomerOption();
             $customerOptionType = $customerOption->getType();
             $code               = $orderItemOption->getCustomerOptionCode();
-
             // Select options use CustomerOptionValues
-            if ($customerOptionType === CustomerOptionTypeEnum::MULTI_SELECT) {
+            if ($customerOptionType === CustomerOptionTypeEnum::MULTI_SELECT || $customerOptionType === CustomerOptionTypeEnum::MULTI_SELECT_EXPANDED) {
                 $optionAsAssociativeArray[$code][] = $orderItemOption->getCustomerOptionValue();
-            } elseif ($customerOptionType === CustomerOptionTypeEnum::SELECT) {
+            } elseif ($customerOptionType === CustomerOptionTypeEnum::SELECT || $customerOptionType === CustomerOptionTypeEnum::SELECT_EXPANDED) {
                 $optionAsAssociativeArray[$code] = $orderItemOption->getCustomerOptionValue();
             } else {
                 $optionAsAssociativeArray[$code] = $this->transformValue($customerOptionType, $orderItemOption->getScalarValue());
             }
         }
+
 
         return $optionAsAssociativeArray;
     }
