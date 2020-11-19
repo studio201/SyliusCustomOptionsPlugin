@@ -71,7 +71,8 @@ final class AddToCartListener
         }
 
         $customerOptionConfiguration = $this->getCustomerOptionsFromRequest($this->requestStack->getCurrentRequest());
-
+        dump($customerOptionConfiguration);
+        die();
         $salesOrderConfigurations = [];
         foreach ($customerOptionConfiguration as $customerOptionCode => $valueArray) {
             if (!is_array($valueArray)) {

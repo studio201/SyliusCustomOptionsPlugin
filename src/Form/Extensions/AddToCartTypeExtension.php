@@ -41,10 +41,11 @@ final class AddToCartTypeExtension extends AbstractTypeExtension
         $builder->add('customer_options', ShopCustomerOptionType::class, [
             'product' => $options['product'],
         ]);
+        
 
         $itemOptions = $builder->get('cartItem')->getOptions();
         $itemType    = get_class($builder->get('cartItem')->getFormConfig()->getType()->getInnerType());
-       
+
         $builder->add('cartItem', $itemType, array_merge($itemOptions, [
             'constraints' => $this->getConstraints($options['product']),
         ]));

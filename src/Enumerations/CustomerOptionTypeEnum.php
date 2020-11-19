@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Brille24\SyliusCustomerOptionsPlugin\Enumerations;
 
+use Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionValuePrice;
 use DateTime;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -82,6 +83,27 @@ final class CustomerOptionTypeEnum implements EnumInterface
         ];
     }
 
+    private static function getChoiceAttributes($val)
+    {
+        $attributes = [
+            'data-title' => $val->getTranslation()->getDescription(),
+            'data-description' => $val->getTranslation()->getDescription(),
+        ];
+        $price = $val->getPrices()->first();
+        if ($price != null) {
+            if ($price->getType() == CustomerOptionValuePrice::TYPE_FIXED_AMOUNT) {
+                $amount = $price != null ? $price->getAmount() : 0;
+                $attributes['data-price-amount'] = $amount;
+            }
+            if ($price->getType() == CustomerOptionValuePrice::TYPE_PERCENT) {
+                $percent = $price != null ? $price->getPercent() : 0;
+                $attributes['data-price-percent'] = $percent;
+            }
+        }
+
+        return $attributes;
+    }
+
     public static function getFormTypeArray(): array
     {
         return [
@@ -97,10 +119,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
                 ChoiceType::class,
                 [
                     'choice_attr' => function ($val, $key, $index) {
-                        return [
-                            'data-title' => $val->getTranslation()->getDescription(),
-                            'data-description' => $val->getTranslation()->getDescription(),
-                        ];
+                        return self::getChoiceAttributes($val);
                     },
                 ],
             ],
@@ -109,10 +128,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
                 [
                     'expanded' => true,
                     'choice_attr' => function ($val, $key, $index) {
-                        return [
-                            'data-title' => $val->getTranslation()->getDescription(),
-                            'data-description' => $val->getTranslation()->getDescription(),
-                        ];
+                        return self::getChoiceAttributes($val);
                     },
                 ],
             ],
@@ -121,10 +137,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
                 [
                     'multiple' => true,
                     'choice_attr' => function ($val, $key, $index) {
-                        return [
-                            'data-title' => $val->getTranslation()->getDescription(),
-                            'data-description' => $val->getTranslation()->getDescription(),
-                        ];
+                        return self::getChoiceAttributes($val);
                     },
                 ],
             ],
@@ -134,10 +147,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
                     'multiple' => true,
                     'expanded' => true,
                     'choice_attr' => function ($val, $key, $index) {
-                        return [
-                            'data-title' => $val->getTranslation()->getDescription(),
-                            'data-description' => $val->getTranslation()->getDescription(),
-                        ];
+                        return self::getChoiceAttributes($val);
                     },
                 ],
             ],
