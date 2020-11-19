@@ -22,6 +22,30 @@ use Symfony\Component\Form\FormEvents;
 
 final class CustomerOptionConfigurationType extends AbstractType
 {
+    /** @var ChannelContextInterface */
+    private $channelContext;
+
+    /** @var CurrencyContextInterface */
+    private $currencyContext;
+
+    /** @var MoneyFormatterInterface */
+    private $moneyFormatter;
+
+    /** @var LocaleContextInterface */
+    private $localeContext;
+
+    public function __construct(
+        ChannelContextInterface $channelContext,
+        CurrencyContextInterface $currencyContext,
+        MoneyFormatterInterface $moneyFormatter,
+        LocaleContextInterface $localeContext
+    ) {
+        $this->channelContext = $channelContext;
+        $this->currencyContext = $currencyContext;
+        $this->moneyFormatter = $moneyFormatter;
+        $this->localeContext = $localeContext;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,7 +64,7 @@ final class CustomerOptionConfigurationType extends AbstractType
                     $data = new DateTime($data['date'], new DateTimeZone($data['timezone']));
                 }
 
-                [$formTypeClass, $formTypeConfig] = CustomerOptionTypeEnum::getFormTypeArray()[$type];
+                [$formTypeClass, $formTypeConfig] = CustomerOptionTypeEnum::getFormTypeArray($this->channelContext->getChannel())[$type];
 
                 // Adding form field for configuration option based on type
                 $form->add(
