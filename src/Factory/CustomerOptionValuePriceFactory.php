@@ -64,6 +64,7 @@ class CustomerOptionValuePriceFactory implements CustomerOptionValuePriceFactory
             case 'fixed':
                 $price->setType(CustomerOptionValuePrice::TYPE_FIXED_AMOUNT);
                 $price->setAmount((int) ($configuration['amount']));
+                $price->setPercent(0);
 
                 break;
             case 'percent':

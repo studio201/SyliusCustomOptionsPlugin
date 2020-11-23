@@ -22,7 +22,8 @@ brille24:
         pricing:
             fixed_amount: Feste Menge
             percent: Prozent
-
+        customization_total: Anpassungen ges.
+        by_product_list: Nach Proukt Liste
     form:
         customer_options:
             subheader: Verwalten der Kundenoptionen
@@ -38,7 +39,8 @@ brille24:
                 datetime: Datum und Zeit
                 number: Zahl
                 boolean: Wahrheitswert
-
+            import_prices: Importiere Preise
+            import: Importieren
         customer_option_groups:
             subheader: Verwalten der Kundenoptionengruppen
             select: Auswahl
@@ -88,4 +90,21 @@ brille24:
     grid:
         options_remaining: "{0} |]0,Inf]und %count% weitere"
         options_empty: Leer
+        
+    email:
+        customer_option_price_import_failed: 'Dein Preisimport ist fehlgeschlagen'
+
+    flashes:
+        customer_option_price_import_error: Could not import customer option value prices
+        customer_option_prices_imported:
+            csv: Imported %count% customer option value price(s) from csv file
+            product_list: Imported %count% customer option value price(s) for the product(s) [%products%] in channel "%channel%"
+            product_list_with_date: Imported %count% customer option value price(s) for the product(s) [%products%] in channel "%channel%" from "%from%" to "%to%"
+        customer_option_prices_import_failed:
+            csv: Failed to import %count% customer option value price(s) from csv file
+            product_list: Failed to import %count% customer option value price(s) for the product(s) [%products%] in channel "%channel%"
+            product_list_with_date: Failed to import %count% customer option value price(s) for the product(s) [%products%] in channel "%channel%" from "%from%" to "%to%"
+
+    validation:
+        customer_option_value_price_dates_overlap: Overlaps with another date range
         delete_not_allowed: 'Die Kundenoption kann nicht gelöscht werden, weil sie in Verwendung ist.'

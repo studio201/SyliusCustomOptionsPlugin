@@ -14,7 +14,6 @@
 
 <div class="ui segment">
     {% set customerOptionType = form.type.vars.value %}
-    {{ customerOptionType }}
     {% if customerOptionType == 'select' or customerOptionType == 'select_expanded' or customerOptionType == 'multi_select' or customerOptionType == 'multi_select_expanded' %}
         {% include '@Brille24SyliusCustomerOptionsPlugin/CustomerOption/_values.html.twig' with {'form': form.values} only %}
     {% else %}
