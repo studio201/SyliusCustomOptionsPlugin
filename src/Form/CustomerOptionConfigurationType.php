@@ -55,7 +55,8 @@ final class CustomerOptionConfigurationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event): void {
+        $channelContext = $this->channelContext;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,  function (FormEvent $event) use ($channelContext){
             $form = $event->getForm();
             $configuration = $event->getData();
 
@@ -68,7 +69,7 @@ final class CustomerOptionConfigurationType extends AbstractType
                     $data = new DateTime($data['date'], new DateTimeZone($data['timezone']));
                 }
 
-                [$formTypeClass, $formTypeConfig] = CustomerOptionTypeEnum::getFormTypeArray($this->channelContext->getChannel())[$type];
+                [$formTypeClass, $formTypeConfig] = CustomerOptionTypeEnum::getFormTypeArray($channelContext->getChannel())[$type];
 
                 // Adding form field for configuration option based on type
                 $form->add(

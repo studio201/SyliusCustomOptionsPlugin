@@ -14,6 +14,7 @@ namespace Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions;
 
 use Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionValuePriceInterface as COValuePriceInterface;
 use Brille24\SyliusCustomerOptionsPlugin\Entity\OrderItemOptionInterface;
+use Brille24\SyliusCustomerOptionsPlugin\Entity\ProductInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -59,17 +60,17 @@ class CustomerOptionValue implements CustomerOptionValueInterface
     /**
      * {@inheritdoc}
      */
-    public function setCode(string $code): void
+    public function getCode(): string
     {
-        $this->code = $code;
+        return $this->code ?? '';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCode(): string
+    public function setCode(string $code): void
     {
-        return $this->code ?? '';
+        $this->code = $code;
     }
 
     /**
@@ -96,6 +97,16 @@ class CustomerOptionValue implements CustomerOptionValueInterface
     /**
      * {@inheritdoc}
      */
+    public function getPrices(): Collection
+    {
+        return $this->prices->filter(static function (CustomerOptionValuePriceInterface $price): bool {
+            return $price->getProduct() === null;
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setPrices(?Collection $prices): void
     {
         if ($prices === null) {
@@ -109,16 +120,6 @@ class CustomerOptionValue implements CustomerOptionValueInterface
         foreach ($prices as $price) {
             $price->setCustomerOptionValue($this);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPrices(): Collection
-    {
-        return $this->prices->filter(static function (CustomerOptionValuePriceInterface $price): bool {
-            return $price->getProduct() === null;
-        });
     }
 
     public function getPricesForChannel(ChannelInterface $channel): Collection
@@ -138,7 +139,8 @@ class CustomerOptionValue implements CustomerOptionValueInterface
     /** {@inheritdoc} */
     public function getPriceForChannel(
         ChannelInterface $channel,
-        bool $ignoreActive = false
+        bool $ignoreActive = false,
+        ProductInterface $product = null
     ): ?CustomerOptionValuePriceInterface {
         $prices = $this->getPricesForChannel($channel);
 
@@ -151,14 +153,25 @@ class CustomerOptionValue implements CustomerOptionValueInterface
         if (count($prices) > 1) {
             // Get the prices with product references (aka. overrides) first
             $prices = $prices->toArray();
+            if ($product != null) {
+                $prices = array_reduce(
+                    $prices,
+                    static function ($accumulator, COValuePriceInterface $price) use($product): COValuePriceInterface {
+                        return $price->getProduct() === $product ? $price : $accumulator;
+                    },
+                    reset($prices)
+                );
+            } else {
+                $prices = array_reduce(
+                    $prices,
+                    static function ($accumulator, COValuePriceInterface $price): COValuePriceInterface {
+                        return $price->getProduct() !== null ? $price : $accumulator;
+                    },
+                    reset($prices)
+                );
+            }
 
-            return array_reduce(
-                $prices,
-                static function ($accumulator, COValuePriceInterface $price): COValuePriceInterface {
-                    return $price->getProduct() !== null ? $price : $accumulator;
-                },
-                reset($prices)
-            );
+            return $prices;
         }
 
         if (count($prices) === 1) {

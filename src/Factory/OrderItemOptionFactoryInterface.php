@@ -14,6 +14,8 @@ namespace Brille24\SyliusCustomerOptionsPlugin\Factory;
 
 use Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionInterface;
 use Brille24\SyliusCustomerOptionsPlugin\Entity\OrderItemOptionInterface;
+use Brille24\SyliusCustomerOptionsPlugin\Entity\Product;
+use Brille24\SyliusCustomerOptionsPlugin\Entity\ProductInterface;
 
 interface OrderItemOptionFactoryInterface
 {
@@ -26,6 +28,16 @@ interface OrderItemOptionFactoryInterface
     public function createForOptionAndValue(CustomerOptionInterface $customerOption, $customerOptionValue): OrderItemOptionInterface;
 
     /**
+     * @param CustomerOptionInterface $customerOption
+     * @param mixed                   $customerOptionValue
+     *
+     * @return OrderItemOptionInterface
+     */
+    public function createForOptionAndValueAndProduct(CustomerOptionInterface $customerOption, $customerOptionValue, ProductInterface  $product): OrderItemOptionInterface;
+
+
+
+    /**
      * Creates an OrderItemOption based on the two input strings
      *
      * @param string $customerOptionCode The code of teh customer option
@@ -36,5 +48,20 @@ interface OrderItemOptionFactoryInterface
     public function createNewFromStrings(
         string $customerOptionCode,
         string $customerOptionValue
+    ): OrderItemOptionInterface;
+
+
+    /**
+     * Creates an OrderItemOption based on the two input strings
+     *
+     * @param string $customerOptionCode The code of teh customer option
+     * @param string $customerOptionValue The code of the value if it is a select else just the value itself
+     *
+     * @return OrderItemOptionInterface
+     */
+    public function createNewFromStringsForProduct(
+        string $customerOptionCode,
+        string $customerOptionValue,
+        ProductInterface $product
     ): OrderItemOptionInterface;
 }

@@ -69,11 +69,17 @@ final class AddToCartListener
         if ($orderItem->getOrder() === null) {
             return;
         }
-
+      
+        $variant = null;
+        $product = null;
+        if ($orderItem->getVariant() != null) {
+            $variant = $orderItem->getVariant();
+            $product = $variant->getProduct();
+        }
         $customerOptionConfiguration = $this->getCustomerOptionsFromRequest($this->requestStack->getCurrentRequest());
-
-        $salesOrderConfigurations = [];
+         $salesOrderConfigurations = [];
         foreach ($customerOptionConfiguration as $customerOptionCode => $valueArray) {
+
             if (!is_array($valueArray)) {
                 $valueArray = [$valueArray];
             }
@@ -87,10 +93,19 @@ final class AddToCartListener
 
             foreach ($valueArray as $value) {
                 // Creating the item
-                $salesOrderConfiguration = $this->orderItemOptionFactory->createNewFromStrings(
-                    $customerOptionCode,
-                    $value
-                );
+                if ($product != null) {
+                    $salesOrderConfiguration = $this->orderItemOptionFactory->createNewFromStringsForProduct(
+                        $customerOptionCode,
+                        $value,
+                        $product
+                    );
+                } else {
+                    $salesOrderConfiguration = $this->orderItemOptionFactory->createNewFromStrings(
+                        $customerOptionCode,
+                        $value
+                    );
+                }
+            
 
                 $salesOrderConfiguration->setOrderItem($orderItem);
 
@@ -99,11 +114,11 @@ final class AddToCartListener
                 $salesOrderConfigurations[] = $salesOrderConfiguration;
             }
         }
+      
 
         $orderItem->setCustomerOptionConfiguration($salesOrderConfigurations);
 
         $this->orderProcessor->process($orderItem->getOrder());
-
         $this->entityManager->persist($orderItem);
         $this->entityManager->flush();
     }
