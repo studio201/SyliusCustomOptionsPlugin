@@ -15,7 +15,6 @@ namespace Brille24\SyliusCustomerOptionsPlugin\Factory;
 use Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionInterface;
 use Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionValueInterface;
 use Brille24\SyliusCustomerOptionsPlugin\Entity\OrderItemOptionInterface;
-use Brille24\SyliusCustomerOptionsPlugin\Entity\Product;
 use Brille24\SyliusCustomerOptionsPlugin\Entity\ProductInterface;
 use Brille24\SyliusCustomerOptionsPlugin\Enumerations\CustomerOptionTypeEnum;
 use Brille24\SyliusCustomerOptionsPlugin\Repository\CustomerOptionRepositoryInterface;
@@ -84,8 +83,8 @@ class OrderItemOptionFactory implements OrderItemOptionFactoryInterface, Factory
         return $orderItemOption;
     }
 
-     /** {@inheritdoc} */
-    public function createForOptionAndValueAndProduct(CustomerOptionInterface $customerOption, $customerOptionValue,ProductInterface $product): OrderItemOptionInterface
+    /** {@inheritdoc} */
+    public function createForOptionAndValueAndProduct(CustomerOptionInterface $customerOption, $customerOptionValue, ProductInterface $product): OrderItemOptionInterface
     {
         /** @var OrderItemOptionInterface $orderItemOption */
         $orderItemOption = $this->createNew();
@@ -134,7 +133,9 @@ class OrderItemOptionFactory implements OrderItemOptionFactoryInterface, Factory
         if (CustomerOptionTypeEnum::isSelect($customerOption->getType())) {
             $customerOptionValue = $this->valueResolver->resolve($customerOption, $customerOptionValue);
         }
+        $orderItemOption = $this->createForOptionAndValueAndProduct($customerOption, $customerOptionValue, $product);
+       
 
-        return $this->createForOptionAndValue($customerOption, $customerOptionValue);
+        return $orderItemOption;
     }
 }

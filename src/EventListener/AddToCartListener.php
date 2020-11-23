@@ -69,7 +69,7 @@ final class AddToCartListener
         if ($orderItem->getOrder() === null) {
             return;
         }
-      
+
         $variant = null;
         $product = null;
         if ($orderItem->getVariant() != null) {
@@ -77,7 +77,7 @@ final class AddToCartListener
             $product = $variant->getProduct();
         }
         $customerOptionConfiguration = $this->getCustomerOptionsFromRequest($this->requestStack->getCurrentRequest());
-         $salesOrderConfigurations = [];
+        $salesOrderConfigurations = [];
         foreach ($customerOptionConfiguration as $customerOptionCode => $valueArray) {
 
             if (!is_array($valueArray)) {
@@ -99,28 +99,33 @@ final class AddToCartListener
                         $value,
                         $product
                     );
+
+
                 } else {
                     $salesOrderConfiguration = $this->orderItemOptionFactory->createNewFromStrings(
                         $customerOptionCode,
                         $value
                     );
                 }
-            
+
 
                 $salesOrderConfiguration->setOrderItem($orderItem);
-
                 $this->entityManager->persist($salesOrderConfiguration);
 
                 $salesOrderConfigurations[] = $salesOrderConfiguration;
             }
         }
-      
+
 
         $orderItem->setCustomerOptionConfiguration($salesOrderConfigurations);
 
         $this->orderProcessor->process($orderItem->getOrder());
+
         $this->entityManager->persist($orderItem);
         $this->entityManager->flush();
+        
+
+
     }
 
     /**

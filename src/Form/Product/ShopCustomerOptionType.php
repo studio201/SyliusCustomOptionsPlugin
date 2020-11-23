@@ -71,7 +71,7 @@ final class ShopCustomerOptionType extends AbstractType
             $customerOptionType = $customerOption->getType();
             $fieldName = $customerOption->getCode();
 
-            [$class, $formOptions] = CustomerOptionTypeEnum::getFormTypeArray($this->channelContext->getChannel())[$customerOptionType];
+            [$class, $formOptions] = CustomerOptionTypeEnum::getFormTypeArray($this->channelContext->getChannel(), $product)[$customerOptionType];
 
             $fieldConfig = $this->getFormConfiguration($formOptions, $customerOption, $product);
             $fieldConfig['mapped'] = $options['mapped'];

@@ -44,6 +44,7 @@ trait OrderItemCustomerOptionCapableTrait
     public function getCustomerOptionConfiguration(bool $assoc=false): array
     {
         /** @var OrderItemOptionInterface[] $orderItemOptionList */
+
         $orderItemOptionList = $this->configuration->toArray();
         if ($assoc) {
             /** @var array<int, mixed> $assocArray */

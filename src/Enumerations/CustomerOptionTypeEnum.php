@@ -83,13 +83,16 @@ final class CustomerOptionTypeEnum implements EnumInterface
         ];
     }
 
-    private static function getChoiceAttributes($val, $channel)
+    private static function getChoiceAttributes($val, $channel, $product)
     {
         $attributes = [
             'data-title' => $val->getTranslation()->getDescription(),
             'data-description' => $val->getTranslation()->getDescription(),
         ];
-        $price = $val->getPriceForChannel($channel);
+
+
+        $price = $val->getPriceForChannel($channel, false, $product);
+        
         if ($price != null) {
             if ($price->getType() == CustomerOptionValuePrice::TYPE_FIXED_AMOUNT) {
                 $amount = $price != null ? $price->getAmount() : 0;
@@ -104,7 +107,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
         return $attributes;
     }
 
-    public static function getFormTypeArray($channel): array
+    public static function getFormTypeArray($channel, $product): array
     {
         return [
             self::TEXT => [
@@ -118,8 +121,8 @@ final class CustomerOptionTypeEnum implements EnumInterface
             self::SELECT => [
                 ChoiceType::class,
                 [
-                    'choice_attr' => function ($val, $key, $index) use ($channel) {
-                        return self::getChoiceAttributes($val, $channel);
+                    'choice_attr' => function ($val, $key, $index) use ($channel, $product) {
+                        return self::getChoiceAttributes($val, $channel, $product);
                     },
                 ],
             ],
@@ -127,8 +130,8 @@ final class CustomerOptionTypeEnum implements EnumInterface
                 ChoiceType::class,
                 [
                     'expanded' => true,
-                    'choice_attr' => function ($val, $key, $index) use ($channel) {
-                        return self::getChoiceAttributes($val, $channel);
+                    'choice_attr' => function ($val, $key, $index) use ($channel, $product) {
+                        return self::getChoiceAttributes($val, $channel, $product);
                     },
                 ],
             ],
@@ -136,8 +139,8 @@ final class CustomerOptionTypeEnum implements EnumInterface
                 ChoiceType::class,
                 [
                     'multiple' => true,
-                    'choice_attr' => function ($val, $key, $index) use ($channel) {
-                        return self::getChoiceAttributes($val, $channel);
+                    'choice_attr' => function ($val, $key, $index) use ($channel, $product) {
+                        return self::getChoiceAttributes($val, $channel, $product);
                     },
                 ],
             ],
@@ -146,8 +149,8 @@ final class CustomerOptionTypeEnum implements EnumInterface
                 [
                     'multiple' => true,
                     'expanded' => true,
-                    'choice_attr' => function ($val, $key, $index) use ($channel) {
-                        return self::getChoiceAttributes($val, $channel);
+                    'choice_attr' => function ($val, $key, $index) use ($channel, $product) {
+                        return self::getChoiceAttributes($val, $channel, $product);
                     },
                 ],
             ],

@@ -39,6 +39,7 @@ final class CustomerOptionRecalculator implements OrderProcessorInterface
     {
         /** @var OrderItemOptionInterface[] $configuration */
         $configuration = $orderItem->getCustomerOptionConfiguration();
+
         foreach ($configuration as $orderItemOption) {
             // Skip all customer options that don't have customer option values as they can not have a price like
             // text options
