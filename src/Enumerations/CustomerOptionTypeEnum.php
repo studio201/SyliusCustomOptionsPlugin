@@ -83,7 +83,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
         ];
     }
 
-    private static function getChoiceAttributes($val, $channel, $product)
+    private static function getChoiceAttributes($val, $channel, $product = null)
     {
         $attributes = [
             'data-title' => $val->getTranslation()->getDescription(),
@@ -92,7 +92,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
 
 
         $price = $val->getPriceForChannel($channel, false, $product);
-        
+
         if ($price != null) {
             if ($price->getType() == CustomerOptionValuePrice::TYPE_FIXED_AMOUNT) {
                 $amount = $price != null ? $price->getAmount() : 0;
@@ -107,7 +107,7 @@ final class CustomerOptionTypeEnum implements EnumInterface
         return $attributes;
     }
 
-    public static function getFormTypeArray($channel, $product): array
+    public static function getFormTypeArray($channel, $product = null): array
     {
         return [
             self::TEXT => [
