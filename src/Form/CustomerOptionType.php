@@ -45,6 +45,7 @@ final class CustomerOptionType extends AbstractResourceType
             ->add('required', CheckboxType::class, [
                 'label' => 'brille24.ui.required',
             ])
+            ->add('hidePrices', CheckboxType::class, ['label' => 'Preise ausblenden'])
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => CustomerOptionTranslationType::class,
                 'label'      => 'brille24.form.customer_options.translations',

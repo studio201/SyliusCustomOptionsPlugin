@@ -17,7 +17,9 @@
                 {% else %}
                     {{ orderItemOption.customerOptionValueName }}
                 {% endif %}
+                {% if orderItemOption.customerOption.hidePrices == false %}
                 {{ renderPrice(orderItemOption) }}
+                {% endif %}
             </div>
         {% endfor %}
     </div>

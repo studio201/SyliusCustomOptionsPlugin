@@ -38,6 +38,10 @@ class CustomerOption implements CustomerOptionInterface
     /** @var bool */
     private $required = false;
 
+
+     /** @var bool */
+    protected $hidePrices;
+
     /** @var Collection|CustomerOptionValueInterface[] */
     private $values;
 
@@ -134,6 +138,22 @@ class CustomerOption implements CustomerOptionInterface
     public function isRequired(): bool
     {
         return $this->required;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidePrices(): bool
+    {
+        return $this->hidePrices;
+    }
+
+    /**
+     * @param bool $hidePrices
+     */
+    public function setHidePrices(bool $hidePrices): void
+    {
+        $this->hidePrices = $hidePrices;
     }
 
     //region Getter and setter for value

@@ -16,6 +16,7 @@
         <field name="configuration" type="json_array"/>
         <field name="code" type="string" unique="true" nullable="false"/>
         <field name="required" type="boolean"/>
+    <field name="hidePrices" type="boolean"/>
 
         <one-to-many
                 target-entity="Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionAssociationInterface"
