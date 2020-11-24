@@ -55,6 +55,7 @@ final class CustomerOptionConfigurationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        
         $channelContext = $this->channelContext;
         $builder->addEventListener(FormEvents::PRE_SET_DATA,  function (FormEvent $event) use ($channelContext){
             $form = $event->getForm();
