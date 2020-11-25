@@ -143,7 +143,7 @@ class CustomerOption implements CustomerOptionInterface
     /**
      * @return bool
      */
-    public function isHidePrices(): bool
+    public function isHidePrices(): ?bool
     {
         return $this->hidePrices;
     }
