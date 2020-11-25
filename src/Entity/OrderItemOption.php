@@ -80,6 +80,12 @@ class OrderItemOption implements OrderItemOptionInterface
     //<editor-fold desc="CustomerOptions">
 
     /** {@inheritdoc} */
+    public function getCustomerOption(): ?CustomerOptionInterface
+    {
+        return $this->customerOption;
+    }
+
+    /** {@inheritdoc} */
     public function setCustomerOption(?CustomerOptionInterface $customerOption): void
     {
         $this->customerOption = $customerOption;
@@ -88,12 +94,6 @@ class OrderItemOption implements OrderItemOptionInterface
             $this->customerOptionName = $customerOption->getName() ?? 'name';
             $this->customerOptionType = $customerOption->getType() ?? 'type';
         }
-    }
-
-    /** {@inheritdoc} */
-    public function getCustomerOption(): ?CustomerOptionInterface
-    {
-        return $this->customerOption;
     }
 
     /** {@inheritdoc} */
@@ -140,14 +140,20 @@ class OrderItemOption implements OrderItemOptionInterface
 
     //<editor-fold desc="CustomerOptionValue">
 
+    /** {@inheritdoc} */
+    public function getCustomerOptionValue(): ?CustomerOptionValueInterface
+    {
+        return $this->customerOptionValue;
+    }
+
     /**
      * @param mixed $value
      */
     public function setCustomerOptionValue($value): void
     {
         if (is_scalar($value)) {
-            $this->optionValue          = (string) $value;
-            $this->customerOptionValue  = null;
+            $this->optionValue = (string)$value;
+            $this->customerOptionValue = null;
 
             return;
         }
@@ -157,24 +163,12 @@ class OrderItemOption implements OrderItemOptionInterface
 
             $this->customerOptionValueCode = $value->getCode() ?? 'code';
             $this->customerOptionValueName = $value->getName() ?? 'name';
-            $this->optionValue             = null;
+            $this->optionValue = null;
         } else {
             $this->optionValue = '';
         }
 
         $this->customerOptionValue = $value;
-    }
-
-    /** {@inheritdoc} */
-    public function getCustomerOptionValue(): ?CustomerOptionValueInterface
-    {
-        return $this->customerOptionValue;
-    }
-
-    /** {@inheritdoc} */
-    public function setCustomerOptionValueCode(?string $code): void
-    {
-        $this->customerOptionValueCode = $code;
     }
 
     /** {@inheritdoc} */
@@ -184,9 +178,9 @@ class OrderItemOption implements OrderItemOptionInterface
     }
 
     /** {@inheritdoc} */
-    public function setCustomerOptionValueName(?string $name): void
+    public function setCustomerOptionValueCode(?string $code): void
     {
-        $this->customerOptionValueName = $name;
+        $this->customerOptionValueCode = $code;
     }
 
     /** {@inheritdoc} */
@@ -200,9 +194,9 @@ class OrderItemOption implements OrderItemOptionInterface
     }
 
     /** {@inheritdoc} */
-    public function setOptionValue(?string $value): void
+    public function setCustomerOptionValueName(?string $name): void
     {
-        $this->optionValue = $value;
+        $this->customerOptionValueName = $name;
     }
 
     /** {@inheritdoc} */
@@ -211,20 +205,20 @@ class OrderItemOption implements OrderItemOptionInterface
         return $this->optionValue;
     }
 
+    /** {@inheritdoc} */
+    public function setOptionValue(?string $value): void
+    {
+        $this->optionValue = $value;
+    }
+
     //</editor-fold>
 
     /** {@inheritdoc} */
     public function setPrice(CustomerOptionValuePriceInterface $price): void
     {
-        $this->fixedPrice  = $price->getAmount();
-        $this->percent     = $price->getPercent();
+        $this->fixedPrice = $price->getAmount();
+        $this->percent = $price->getPercent();
         $this->pricingType = $price->getType();
-    }
-
-    /** {@inheritdoc} */
-    public function setFixedPrice(int $price): void
-    {
-        $this->fixedPrice = $price;
     }
 
     /** {@inheritdoc} */
@@ -234,9 +228,9 @@ class OrderItemOption implements OrderItemOptionInterface
     }
 
     /** {@inheritdoc} */
-    public function setPercent(float $percent): void
+    public function setFixedPrice(int $price): void
     {
-        $this->percent = $percent;
+        $this->fixedPrice = $price;
     }
 
     /** {@inheritdoc} */
@@ -246,15 +240,21 @@ class OrderItemOption implements OrderItemOptionInterface
     }
 
     /** {@inheritdoc} */
-    public function setPricingType(string $type): void
+    public function setPercent(float $percent): void
     {
-        $this->pricingType = $type;
+        $this->percent = $percent;
     }
 
     /** {@inheritdoc} */
     public function getPricingType(): string
     {
         return $this->pricingType;
+    }
+
+    /** {@inheritdoc} */
+    public function setPricingType(string $type): void
+    {
+        $this->pricingType = $type;
     }
 
     /** {@inheritdoc} */
@@ -270,7 +270,19 @@ class OrderItemOption implements OrderItemOptionInterface
     public function getCalculatedPrice(int $basePrice): int
     {
         if ($this->getPricingType() === CustomerOptionValuePrice::TYPE_PERCENT) {
-            return (int) round($basePrice * $this->getPercent());
+            return (int)round($basePrice * $this->getPercent());
+        }
+        if ($this->getCustomerOption() != null && $this->getCustomerOption()->getDependsOnOption() != null) {
+            $dependentOption = $this->getCustomerOption()->getDependsOnOption();
+
+            $config = $this->getOrderItem()->getCustomerOptionConfiguration();
+
+            foreach ($config as $orderItemOption) {
+
+                if ($orderItemOption->getCustomerOption() == $dependentOption) {
+                    return $this->getFixedPrice() * intval($orderItemOption->getCustomerOptionValueName());
+                }
+            }
         }
 
         return $this->getFixedPrice();
@@ -283,7 +295,7 @@ class OrderItemOption implements OrderItemOptionInterface
         $equals &= $this->getCustomerOptionValue() === $orderItemOption->getCustomerOptionValue();
         $equals &= $this->getOptionValue() === $orderItemOption->getOptionValue();
 
-        return (bool) $equals;
+        return (bool)$equals;
     }
 
     public function __toString()

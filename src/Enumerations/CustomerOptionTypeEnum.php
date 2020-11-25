@@ -97,6 +97,12 @@ final class CustomerOptionTypeEnum implements EnumInterface
             if ($price->getType() == CustomerOptionValuePrice::TYPE_FIXED_AMOUNT) {
                 $amount = $price != null ? $price->getAmount() : 0;
                 $attributes['data-price-amount'] = $amount;
+                $option = $val->getCustomerOption();
+                if($option->getDependsOnOption() != null){
+                    $attributes['data-multiply-with'] = $option->getDependsOnOption()->getCode();
+                }
+
+
             }
             if ($price->getType() == CustomerOptionValuePrice::TYPE_PERCENT) {
                 $percent = $price != null ? $price->getPercent() : 0;
