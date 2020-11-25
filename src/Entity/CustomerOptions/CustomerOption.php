@@ -38,8 +38,7 @@ class CustomerOption implements CustomerOptionInterface
     /** @var bool */
     private $required = false;
 
-
-     /** @var bool */
+    /** @var bool */
     protected $hidePrices;
 
     /** @var Collection|CustomerOptionValueInterface[] */
@@ -58,9 +57,9 @@ class CustomerOption implements CustomerOptionInterface
     {
         $this->initializeTranslationsCollection();
 
-        $this->values            = new ArrayCollection();
+        $this->values = new ArrayCollection();
         $this->groupAssociations = new ArrayCollection();
-        $this->orders            = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     /**
@@ -69,6 +68,14 @@ class CustomerOption implements CustomerOptionInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**
@@ -89,31 +96,15 @@ class CustomerOption implements CustomerOptionInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
     public function getTypeCode(): ?string
     {
-        $type         = $this->getType();
+        $type = $this->getType();
         $translations = CustomerOptionTypeEnum::getTranslateArray();
         if (array_key_exists($type, $translations)) {
             return $translations[$type];
         }
 
         return $this->getType();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCode(?string $code): void
-    {
-        $this->code = $code;
     }
 
     /**
@@ -127,9 +118,9 @@ class CustomerOption implements CustomerOptionInterface
     /**
      * {@inheritdoc}
      */
-    public function setRequired(bool $required): void
+    public function setCode(?string $code): void
     {
-        $this->required = $required;
+        $this->code = $code;
     }
 
     /**
@@ -141,11 +132,19 @@ class CustomerOption implements CustomerOptionInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setRequired(bool $required): void
+    {
+        $this->required = $required;
+    }
+
+    /**
      * @return bool
      */
     public function isHidePrices(): ?bool
     {
-        return $this->hidePrices;
+        return $this->hidePrices == null ? false : $this->hidePrices;
     }
 
     /**
@@ -169,6 +168,17 @@ class CustomerOption implements CustomerOptionInterface
     /**
      * {@inheritdoc}
      */
+    public function setValues(array $values): void
+    {
+        $this->values->clear();
+        foreach ($values as $value) {
+            $this->addValue($value);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addValue(CustomerOptionValueInterface $value): void
     {
         $this->values->add($value);
@@ -182,17 +192,6 @@ class CustomerOption implements CustomerOptionInterface
     {
         $this->values->removeElement($value);
         $value->setCustomerOption(null);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setValues(array $values): void
-    {
-        $this->values->clear();
-        foreach ($values as $value) {
-            $this->addValue($value);
-        }
     }
 
     //endregion
@@ -212,7 +211,7 @@ class CustomerOption implements CustomerOptionInterface
     {
         // Setting the new values
         foreach ($configuration as $key => $value) {
-            $optionKey                                = str_replace(':', '.', $key);
+            $optionKey = str_replace(':', '.', $key);
             $this->configuration[$optionKey]['value'] = $value;
         }
 
