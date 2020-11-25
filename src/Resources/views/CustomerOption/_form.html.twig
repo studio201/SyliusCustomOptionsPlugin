@@ -8,7 +8,11 @@
         {{ form_row(form.code) }}
         {{ form_row(form.type, {'attr': {'onChange': "form.submit()"}}) }}
         {{ form_row(form.required) }}
-        {{ form_row(form.hidePrices) }}
+
+    </div>
+    <div class="three fields">
+         {{ form_row(form.hidePrices) }}
+         {{ form_row(form.dependsOnOption) }}
     </div>
     {{ translationForm(form.translations) }}
 </div>

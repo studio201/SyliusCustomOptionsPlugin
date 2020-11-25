@@ -17,6 +17,13 @@
         <field name="code" type="string" unique="true" nullable="false"/>
         <field name="required" type="boolean"/>
         <field name="hidePrices" type="boolean"/>
+        <many-to-one
+                target-entity="Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionInterface"
+                field="dependsOnOption"
+                inversed-by="dependingOptions"
+        />
+
+
 
         <one-to-many
                 target-entity="Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOptionAssociationInterface"

@@ -41,6 +41,9 @@ class CustomerOption implements CustomerOptionInterface
     /** @var bool */
     protected $hidePrices;
 
+    /** @var CustomerOptionInterface|null */
+    protected $dependsOnOption;
+
     /** @var Collection|CustomerOptionValueInterface[] */
     private $values;
 
@@ -153,6 +156,22 @@ class CustomerOption implements CustomerOptionInterface
     public function setHidePrices(bool $hidePrices): void
     {
         $this->hidePrices = $hidePrices;
+    }
+
+    /**
+     * @return CustomerOptionInterface|null
+     */
+    public function getDependsOnOption(): ?CustomerOptionInterface
+    {
+        return $this->dependsOnOption;
+    }
+
+    /**
+     * @param CustomerOptionInterface|null $dependsOnOption
+     */
+    public function setDependsOnOption(?CustomerOptionInterface $dependsOnOption): void
+    {
+        $this->dependsOnOption = $dependsOnOption;
     }
 
     //region Getter and setter for value

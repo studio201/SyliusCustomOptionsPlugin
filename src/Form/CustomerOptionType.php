@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Brille24\SyliusCustomerOptionsPlugin\Form;
 
+use Brille24\SyliusCustomerOptionsPlugin\Entity\CustomerOptions\CustomerOption;
 use Brille24\SyliusCustomerOptionsPlugin\Enumerations\CustomerOptionTypeEnum;
 use Doctrine\Common\Collections\Collection;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -46,6 +48,17 @@ final class CustomerOptionType extends AbstractResourceType
                 'label' => 'brille24.ui.required',
             ])
             ->add('hidePrices', CheckboxType::class, ['label' => 'Preise ausblenden'])
+            ->add('dependsOnOption', EntityType::class, [
+                'choice_label' => function(CustomerOption $option) {
+                    return $option->getName();
+                },
+                'class' => CustomerOption::class,
+                'required' => false,
+                'multiple' => false,
+                'label' => 'Abhängig von Option',
+
+            ])
+
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => CustomerOptionTranslationType::class,
                 'label'      => 'brille24.form.customer_options.translations',
