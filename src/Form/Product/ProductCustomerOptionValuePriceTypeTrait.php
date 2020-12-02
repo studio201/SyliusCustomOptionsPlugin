@@ -45,7 +45,7 @@ trait ProductCustomerOptionValuePriceTypeTrait
                 'attr' => ['onChange' => 'customerOptions.changeCustomerAmountCurrencyOnChannelChange(this);'],
             ])
             ->add('percent', PercentType::class, [
-                'empty_data' => '0.00',
+                'empty_data' => '0',
                 'scale'      => 5,
                 'required'   => false,
             ])
