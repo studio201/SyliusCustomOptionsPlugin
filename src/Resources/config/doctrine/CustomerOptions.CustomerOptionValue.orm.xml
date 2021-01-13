@@ -33,7 +33,7 @@
 
         <!-- Constraints -->
         <unique-constraints>
-            <unique-constraint columns="customer_option_id,code"/>
+            <unique-constraint columns="customerOption,code"/>
         </unique-constraints>
     </entity>
 </doctrine-mapping>
